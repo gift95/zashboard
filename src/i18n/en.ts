@@ -198,6 +198,7 @@ const en = {
   RarelyUsed: 'Rarely Used',
   OccasionalUsed: 'Occasional Used',
   MostUsed: 'Most Used',
+  all: 'All',
 }
 
 export type LANG_MESSAGE = typeof en

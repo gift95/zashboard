@@ -200,6 +200,7 @@ const ru: LANG_MESSAGE = {
   RarelyUsed: 'Редко используется',
   OccasionalUsed: 'Временно используется',
   MostUsed: 'Часто используется',
+  all: 'Все',
 }
 
 export default ru

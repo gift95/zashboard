@@ -16,7 +16,7 @@
               isSidebarCollapsed && 'justify-center',
               'py-2',
             ]"
-            @click="() => router.push({ name: r })"
+            @click.passive="() => router.push({ name: r })"
           >
             <component
               :is="ROUTE_ICON_MAP[r]"

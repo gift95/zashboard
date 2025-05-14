@@ -22,7 +22,7 @@ defineProps<{
       :name="node"
       :group-name="name"
       :active="node === now"
-      @click="handlerProxySelect(name, node)"
+      @click.stop="handlerProxySelect(name, node)"
     />
   </ProxyNodeGrid>
 </template>

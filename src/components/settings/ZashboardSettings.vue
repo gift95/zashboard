@@ -130,9 +130,9 @@
               max="100"
               v-model="dashboardTransparent"
               class="range max-w-64"
-              @touchstart.stop
-              @touchmove.stop
-              @touchend.stop
+              @touchstart.passive.stop
+              @touchmove.passive.stop
+              @touchend.passive.stop
             />
           </div>
 

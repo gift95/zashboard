@@ -2,9 +2,9 @@
   <div
     ref="parentRef"
     class="h-full overflow-y-auto p-2"
-    @touchstart.stop
-    @touchmove.stop
-    @touchend.stop
+    @touchstart.passive.stop
+    @touchmove.passive.stop
+    @touchend.passive.stop
   >
     <div :style="{ height: `${totalSize}px` }">
       <table

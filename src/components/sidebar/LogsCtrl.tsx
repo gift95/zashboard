@@ -1,6 +1,7 @@
 import { isSingBox } from '@/api'
 import { LOG_LEVEL } from '@/constant'
-import { initLogs, isPaused, logFilter, logLevel, logs } from '@/store/logs'
+import { isMiddleScreen } from '@/helper/utils'
+import { initLogs, isPaused, logFilter, logLevel, logTypeFilter, logs } from '@/store/logs'
 import { logRetentionLimit, logSearchHistory } from '@/store/settings'
 import { PauseIcon, PlayIcon, WrenchScrewdriverIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { debounce } from 'lodash'
@@ -45,10 +46,37 @@ export default defineComponent({
       return [LOG_LEVEL.Debug, LOG_LEVEL.Info, LOG_LEVEL.Warning, LOG_LEVEL.Error, LOG_LEVEL.Silent]
     })
 
+    const logTypeOptions = computed(() => {
+      const types: string[] = []
+
+      if (isSingBox.value) {
+        for (const log of logs.value) {
+          const startIndex = log.payload.startsWith('[') ? log.payload.indexOf(']') + 2 : 0
+          const endIndex = log.payload.indexOf(':', startIndex)
+          const type = log.payload.slice(startIndex, endIndex + 1)
+
+          if (!types.includes(type)) {
+            types.push(type)
+          }
+        }
+      } else {
+        for (const log of logs.value) {
+          const index = log.payload.indexOf(' ')
+          const type = index === -1 ? log.payload : log.payload.slice(0, index)
+
+          if (!types.includes(type)) {
+            types.push(type)
+          }
+        }
+      }
+
+      return types.sort()
+    })
+
     return () => {
       const levelSelect = (
         <select
-          class={['join-item select select-sm', !props.horizontal && 'w-full']}
+          class={['join-item select select-sm']}
           v-model={logLevel.value}
           onChange={initLogs}
         >
@@ -73,6 +101,23 @@ export default defineComponent({
           menusDeleteable={true}
           onUpdate:menus={(val) => (logSearchHistory.value = val)}
         />
+      )
+
+      const logTypeSelect = (
+        <select
+          class={['join-item select select-sm w-36', !props.horizontal && 'w-full']}
+          v-model={logTypeFilter.value}
+        >
+          <option value="">{t('all')}</option>
+          {logTypeOptions.value.map((opt) => (
+            <option
+              key={opt}
+              value={opt}
+            >
+              {opt}
+            </option>
+          ))}
+        </select>
       )
 
       const settingsModal = (
@@ -118,10 +163,25 @@ export default defineComponent({
       )
 
       if (props.horizontal) {
+        if (isMiddleScreen.value) {
+          return (
+            <div class="flex flex-col items-center justify-between gap-2 p-2">
+              <div class="flex w-full items-center justify-between gap-2">
+                {logTypeSelect}
+                {buttons}
+              </div>
+              <div class="join w-full">
+                {levelSelect}
+                {searchInput}
+              </div>
+            </div>
+          )
+        }
         return (
           <div class="flex items-center justify-between gap-2 p-2">
-            <div class="join max-w-96 flex-1">
+            <div class="join max-w-128 flex-1">
               {levelSelect}
+              {logTypeSelect}
               {searchInput}
             </div>
             {buttons}
@@ -131,10 +191,13 @@ export default defineComponent({
       return (
         <div class="flex w-full flex-col items-center gap-2 p-2">
           <div class="flex w-full items-center gap-2">
-            {levelSelect}
+            {logTypeSelect}
             {buttons}
           </div>
-          <div class="w-full">{searchInput}</div>
+          <div class="join w-full">
+            {levelSelect}
+            {searchInput}
+          </div>
         </div>
       )
     }

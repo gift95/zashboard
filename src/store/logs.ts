@@ -9,6 +9,7 @@ import { logRetentionLimit, sourceIPLabelList } from './settings'
 
 export const logs = ref<LogWithSeq[]>([])
 export const logFilter = ref('')
+export const logTypeFilter = ref('')
 export const isPaused = ref(false)
 export const logLevel = useStorage<string>('config/log-level', LOG_LEVEL.Info)
 

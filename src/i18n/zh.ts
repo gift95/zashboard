@@ -197,6 +197,7 @@ const zh: LANG_MESSAGE = {
   RarelyUsed: '很少使用',
   OccasionalUsed: '偶尔使用',
   MostUsed: '经常使用',
+  all: '全部',
 }
 
 export default zh

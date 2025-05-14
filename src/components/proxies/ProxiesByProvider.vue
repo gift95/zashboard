@@ -14,6 +14,7 @@ const props = defineProps<{
 
 const groupedProxies = computed(() => {
   const groupdProixes: Record<string, string[]> = {}
+  const providerKeys: string[] = []
 
   for (const proxy of props.renderProxies) {
     const providerName =
@@ -23,13 +24,17 @@ const groupedProxies = computed(() => {
     if (groupdProixes[providerName]) {
       groupdProixes[providerName].push(proxy)
     } else {
+      if (providerName === '') {
+        providerKeys.unshift('')
+      } else {
+        providerKeys.push(providerName)
+      }
+
       groupdProixes[providerName] = [proxy]
     }
   }
 
-  return ['', ...proxyProviederList.value.map((group) => group.name)]
-    .filter((providerName) => groupdProixes[providerName]?.length > 0)
-    .map((providerName) => [providerName, groupdProixes[providerName]])
+  return providerKeys.map((providerName) => [providerName, groupdProixes[providerName]])
 })
 </script>
 
@@ -54,7 +59,7 @@ const groupedProxies = computed(() => {
           :name="node"
           :group-name="name"
           :active="node === now"
-          @click="handlerProxySelect(name, node)"
+          @click.stop="handlerProxySelect(name, node)"
         />
       </ProxyNodeGrid>
     </div>
