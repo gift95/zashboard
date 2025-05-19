@@ -19,6 +19,7 @@ import {
   sourceIPLabelList,
   splitOverviewPage,
 } from '@/store/settings'
+import { activeBackend } from '@/store/setup'
 import type { Backend, Connection } from '@/types'
 import dayjs from 'dayjs'
 import prettyBytes, { type Options } from 'pretty-bytes'
@@ -108,7 +109,8 @@ const preprocessSourceIPList = () => {
   sourceIPMap.clear()
   sourceIPRegexList.length = 0
 
-  for (const { key, label } of sourceIPLabelList.value) {
+  for (const { key, label, scope } of sourceIPLabelList.value) {
+    if (scope && !scope.includes(activeBackend.value?.uuid as string)) continue
     if (key.startsWith('/')) {
       sourceIPRegexList.push({ regex: new RegExp(key.slice(1), 'i'), label })
     } else {
@@ -131,7 +133,10 @@ const cacheResult = (ip: string, label: string) => {
   return label
 }
 
-watch(sourceIPLabelList, preprocessSourceIPList, { immediate: true, deep: true })
+watch(() => [sourceIPLabelList.value, activeBackend.value], preprocessSourceIPList, {
+  immediate: true,
+  deep: true,
+})
 
 export const getIPLabelFromMap = (ip: string) => {
   if (!ip) return ip === '' ? 'Inner' : ''

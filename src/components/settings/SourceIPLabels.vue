@@ -34,27 +34,68 @@
           @start="disableSwipe = true"
           @end="disableSwipe = false"
         >
-          <template #item="{ element: { id, key, label } }">
+          <template #item="{ element: sourceIP }">
             <div
-              :key="id"
+              :key="sourceIP.id"
               class="flex items-center gap-2"
             >
               <ChevronUpDownIcon class="drag-handle h-4 w-4 shrink-0 cursor-grab" />
               <TextInput
                 class="w-36 max-w-64 flex-1"
-                :modelValue="key"
+                :modelValue="sourceIP.key"
                 :menus="sourceList"
-                @change="(e) => handlerLabelKeyChange(id, 'key', e)"
+                @change="(e) => handlerLabelKeyChange(sourceIP.id, 'key', e)"
               />
+              <button
+                class="btn btn-sm"
+                :popovertarget="sourceIP.id"
+                :style="`anchor-name:--${sourceIP.id}`"
+              >
+                {{ $t('limitEffectiveScope') }}
+              </button>
+              <ul
+                class="dropdown menu rounded-box bg-base-100 mt-2 w-52 shadow-md"
+                popover
+                :id="sourceIP.id"
+                :style="`position-anchor:--${sourceIP.id}`"
+              >
+                <div
+                  v-for="backend in backendList"
+                  :key="backend.uuid"
+                  class="mb-2"
+                >
+                  <label class="flex cursor-pointer items-center gap-2">
+                    <input
+                      type="checkbox"
+                      class="checkbox checkbox-sm"
+                      :checked="getScopeValueFromSouceIPByBackendID(backend.uuid, sourceIP)"
+                      @change="
+                        (e: Event) => {
+                          const target = e.target as HTMLInputElement
+
+                          setScopeValueFromSouceIPByBackendID(
+                            backend.uuid,
+                            sourceIP,
+                            target.checked,
+                          )
+                        }
+                      "
+                    />
+                    <span>
+                      {{ getUrlFromBackend(backend) }}
+                    </span>
+                  </label>
+                </div>
+              </ul>
               <ArrowRightCircleIcon class="h-4 w-4 shrink-0" />
               <TextInput
                 class="w-28 sm:w-40"
-                :modelValue="label"
-                @change="(e) => handlerLabelKeyChange(id, 'label', e)"
+                :modelValue="sourceIP.label"
+                @change="(e) => handlerLabelKeyChange(sourceIP.id, 'label', e)"
               />
               <button
                 class="btn btn-circle btn-ghost btn-sm"
-                @click="() => handlerLabelRemove(id)"
+                @click="() => handlerLabelRemove(sourceIP.id)"
               >
                 <TrashIcon class="h-4 w-4" />
               </button>
@@ -72,6 +113,43 @@
       v-model="newLabelForIP.key"
       placeholder="IP | eui64 | /Regex"
     />
+    <button
+      class="btn btn-sm"
+      popovertarget="popover-new-sourceip-label"
+      style="anchor-name: --new-souceip-label"
+    >
+      {{ $t('limitEffectiveScope') }}
+    </button>
+    <ul
+      class="dropdown menu rounded-box bg-base-100 mt-2 w-52 shadow-md"
+      popover
+      id="popover-new-sourceip-label"
+      style="position-anchor: --new-souceip-label"
+    >
+      <div
+        v-for="backend in backendList"
+        :key="backend.uuid"
+        class="mb-2"
+      >
+        <label class="flex cursor-pointer items-center gap-2">
+          <input
+            type="checkbox"
+            class="checkbox checkbox-sm"
+            :checked="getScopeValueFromSouceIPByBackendID(backend.uuid, newLabelForIP)"
+            @change="
+              (e: Event) => {
+                const target = e.target as HTMLInputElement
+
+                setScopeValueFromSouceIPByBackendID(backend.uuid, newLabelForIP, target.checked)
+              }
+            "
+          />
+          <span>
+            {{ getUrlFromBackend(backend) }}
+          </span>
+        </label>
+      </div>
+    </ul>
     <ArrowRightCircleIcon class="h-4 w-4 shrink-0" />
     <TextInput
       class="w-28 sm:w-40"
@@ -90,8 +168,11 @@
 
 <script setup lang="ts">
 import { disableSwipe } from '@/composables/swipe'
+import { getUrlFromBackend } from '@/helper'
 import { connections } from '@/store/connections'
 import { sourceIPLabelList } from '@/store/settings'
+import { backendList } from '@/store/setup'
+import type { SourceIPLabel } from '@/types'
 import {
   ArrowRightCircleIcon,
   ChevronDownIcon,
@@ -101,13 +182,14 @@ import {
   TagIcon,
   TrashIcon,
 } from '@heroicons/vue/24/outline'
+import { useSessionStorage } from '@vueuse/core'
 import { uniq } from 'lodash'
 import { v4 as uuid } from 'uuid'
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import Draggable from 'vuedraggable'
 import TextInput from '../common/TextInput.vue'
 
-const dialogVisible = ref(false)
+const dialogVisible = useSessionStorage('cache/sourceip-label-dialog-visible', false)
 const sourceList = computed(() => {
   return uniq(connections.value.map((conn) => conn.metadata.sourceIP))
     .filter(Boolean)
@@ -149,6 +231,31 @@ const handlerLabelKeyChange = (id: string, path: 'key' | 'label', value: string)
 
   if (source) {
     source[path] = key
+  }
+}
+
+const getScopeValueFromSouceIPByBackendID = (
+  backendID: string,
+  sourceIP: Omit<SourceIPLabel, 'id'>,
+) => {
+  return sourceIP.scope?.some((item) => item === backendID)
+}
+
+const setScopeValueFromSouceIPByBackendID = (
+  backendID: string,
+  sourceIP: Omit<SourceIPLabel, 'id'>,
+  value: boolean,
+) => {
+  if (value) {
+    if (!sourceIP.scope) {
+      sourceIP.scope = []
+    }
+    sourceIP.scope?.push(backendID)
+  } else {
+    sourceIP.scope = sourceIP.scope?.filter((item) => item !== backendID)
+    if (!sourceIP.scope?.length) {
+      delete sourceIP.scope
+    }
   }
 }
 </script>

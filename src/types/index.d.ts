@@ -158,4 +158,5 @@ export type SourceIPLabel = {
   key: string
   label: string
   id: string
+  scope?: string[]
 }
