@@ -12,10 +12,10 @@ dist
 dist-ssr
 coverage
 *.local
-
+/.github/
 /cypress/videos/
 /cypress/screenshots/
-
+.gitignore
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
