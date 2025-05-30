@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { getIPLabelFromMap } from '@/helper'
+import { getIPLabelFromMap } from '@/helper/sourceip'
 import { connections, sourceIPFilter } from '@/store/connections'
 import * as ipaddr from 'ipaddr.js'
 import { isEqual, uniq } from 'lodash'
@@ -28,18 +28,24 @@ defineProps<{
 
 const sourceIPs = computed(() => {
   return uniq(connections.value.map((conn) => conn.metadata.sourceIP)).sort((a, b) => {
-    const isPreIPv4 = ipaddr.IPv4.isIPv4(a)
-    const isNextIPv4 = ipaddr.IPv4.isIPv4(b)
+    if (!ipaddr.isValid(a)) return -1
+    if (!ipaddr.isValid(b)) return 1
+
+    const preIP = ipaddr.parse(a)
+    const nextIP = ipaddr.parse(b)
+
+    const isPreIPv4 = preIP.kind() === 'ipv4'
+    const isNextIPv4 = nextIP.kind() === 'ipv4'
 
     if (!isPreIPv4 && isNextIPv4) return 1
     if (!isNextIPv4 && isPreIPv4) return -1
 
-    const preIP = ipaddr.parse(a).toByteArray()
-    const nextIP = ipaddr.parse(b).toByteArray()
+    const preIPBytes = preIP.toByteArray()
+    const nextIPBytes = nextIP.toByteArray()
 
-    for (let i = 0; i < preIP.length; i++) {
-      if (preIP[i] !== nextIP[i]) {
-        return preIP[i] - nextIP[i]
+    for (let i = 0; i < preIPBytes.length; i++) {
+      if (preIPBytes[i] !== nextIPBytes[i]) {
+        return preIPBytes[i] - nextIPBytes[i]
       }
     }
     return 0

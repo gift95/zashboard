@@ -3,16 +3,15 @@ import { useBounceOnVisible } from '@/composables/bouncein'
 import { useConnections } from '@/composables/connections'
 import { CONNECTIONS_TABLE_ACCESSOR_KEY, PROXY_CHAIN_DIRECTION } from '@/constant'
 import {
-  fromNow,
   getDestinationFromConnection,
   getDestinationTypeFromConnection,
   getHostFromConnection,
   getInboundUserFromConnection,
-  getIPLabelFromMap,
   getNetworkTypeFromConnection,
   getProcessFromConnection,
-  prettyBytesHelper,
 } from '@/helper'
+import { getIPLabelFromMap } from '@/helper/sourceip'
+import { fromNow, prettyBytesHelper } from '@/helper/utils'
 import { connectionCardLines, proxyChainDirection } from '@/store/settings'
 import type { Connection } from '@/types'
 import {

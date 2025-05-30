@@ -1,6 +1,9 @@
 # zashboard
 
-<img src="pc.png" height="350">   <img src="mobile.png" height="350">
+<p align="center">
+  <img src="./readme/pc.png" height="300">
+  <img src="./readme/mobile.png" height="300">
+</p>
 
 ## **Requirement**
 Browser support
@@ -19,8 +22,13 @@ For **Mihomo** users:
 The **Upgrade Dashboard** function utilizes the API from Mihomo core. Ensure you set the [configuration URL](https://wiki.metacubex.one/config/general/#_9) to the zashboard's URL.
 
 You can download the zashboard files here:
-- [dist.zip (7.64MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip) – Includes better font-loading experience.
-- [dist-cdn-fonts.zip (1.27MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist-cdn-fonts.zip) – Optimized for devices with limited storage.
+
+release:
+- [dist.zip (7.7MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip) – Includes better font-loading experience.
+- [dist-cdn-fonts.zip (1.3MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist-cdn-fonts.zip) – Optimized for devices with limited storage.
+
+dev:
+- [gh-pages.zip (7.7MB)](https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip)
 
 ## **Docker Setup**
 To run zashboard via Docker, use the following command:

@@ -7,7 +7,7 @@ export interface IPInfo {
   region: string
   city: string
   asn: string
-  asnName: string
+  organization: string
 }
 
 // china
@@ -173,29 +173,30 @@ export const getIPInfo = async (ip = ''): Promise<IPInfo> => {
         region: ipapi.location.state,
         city: ipapi.location.city,
         asn: ipapi.asn.asn.toString(),
-        asnName: ipapi.asn.org,
+        organization: ipapi.asn.org,
       }
-    case IP_INFO_API.IPSB:
-      const ipsb = await getIPFromIpsbAPI(ip)
-
-      return {
-        ip: ipsb.ip,
-        country: ipsb.country,
-        region: ipsb.region,
-        city: ipsb.city || ipsb.region,
-        asn: ipsb.asn.toString(),
-        asnName: ipsb.asn_organization,
-      }
-    default:
+    case IP_INFO_API.IPWHOIS:
       const ipwhois = await getIPFromIPWhoisAPI(ip)
 
       return {
         ip: ipwhois.ip,
         region: ipwhois.region,
         country: ipwhois.country,
-        city: ipwhois.city || ipwhois.region,
+        city: ipwhois.city,
         asn: ipwhois.connection.asn.toString(),
-        asnName: ipwhois.connection.org,
+        organization: ipwhois.connection.org,
+      }
+    case IP_INFO_API.IPSB:
+    default:
+      const ipsb = await getIPFromIpsbAPI(ip)
+
+      return {
+        ip: ipsb.ip,
+        country: ipsb.country,
+        region: ipsb.region,
+        city: ipsb.city,
+        asn: ipsb.asn.toString(),
+        organization: ipsb.organization,
       }
   }
 }

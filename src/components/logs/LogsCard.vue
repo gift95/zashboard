@@ -1,5 +1,5 @@
 <template>
-  <div class="card mb-1 block p-2 text-sm break-all">
+  <div class="card hover:bg-base-200 mb-1 block p-2 text-sm break-all">
     <span>{{ log.seq }}</span>
     <span class="text-main mx-2">
       {{ log.time }}

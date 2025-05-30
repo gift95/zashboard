@@ -6,11 +6,11 @@
 }
 
 @theme {
-  --font-MiSans: 'MiSans-VF', 'NotoEmoji', 'system-ui';
-  --font-SarasaUI: 'SarasaUiSC-Regular', 'NotoEmoji', 'system-ui';
-  --font-PingFang: 'PingFangSC-Regular', 'NotoEmoji', 'system-ui';
-  --font-FiraSans: 'Fira Sans', 'NotoEmoji', 'system-ui';
-  --font-SystemUI: 'NotoEmoji', 'system-ui';
+  --font-MiSans: 'MiSans-VF', 'NotoEmoji', system-ui;
+  --font-SarasaUI: 'SarasaUiSC-Regular', 'NotoEmoji', system-ui;
+  --font-PingFang: 'PingFangSC-Regular', 'NotoEmoji', system-ui;
+  --font-FiraSans: 'Fira Sans', 'NotoEmoji', system-ui;
+  --font-SystemUI: 'NotoEmoji', system-ui;
 }
 
 @layer utilities {
@@ -18,39 +18,47 @@
     font-family: 'NotoEmoji';
     src: url('./NotoColorEmoji-flagsonly.ttf') format('truetype');
   }
-}
 
-@utility card {
-  @apply bg-base-100 rounded-lg shadow-md;
-  .card-body {
-    @apply p-4;
+  .collapse {
+    @apply bg-base-100 rounded-lg shadow-md;
   }
-}
 
-@utility collapse {
-  @apply bg-base-100 rounded-lg shadow-md;
-}
+  .collapse.transparent-collapse {
+    @apply bg-transparent! shadow-none! backdrop-blur-none!; /* 取代 background-color: transparent */
+  }
 
-@utility select {
-  @apply w-auto;
-}
+  .card {
+    @apply bg-base-100 rounded-lg shadow-md;
+    .card-body {
+      @apply p-4;
+    }
+  }
 
-@utility btn {
-  @apply border-none;
-}
+  .select {
+    @apply w-auto;
+  }
 
-@utility tabs {
+  .btn {
+    @apply border-none;
+  }
+
+  .tabs {
+    .tab {
+      @apply px-2;
+    }
+    .tab.tab-active {
+      @apply bg-primary text-primary-content;
+    }
+  }
+
   .tab {
-    @apply px-2;
+    @apply max-md:min-w-24;
   }
-  .tab.tab-active {
-    @apply bg-primary text-primary-content;
-  }
-}
 
-@utility table {
-  & tr {
-    @apply border-b-0;
+  .table {
+    & tr {
+      @apply border-b-0;
+    }
   }
 }
 
@@ -160,6 +168,25 @@
 }
 .tippy-box[data-theme^='base'][data-placement^='left'] > .tippy-arrow:before {
   @apply border-l-base-100;
+}
+
+.tippy-box[data-theme^='transparent'] {
+  @apply rounded-lg;
+  .tippy-content {
+    @apply p-0;
+  }
+}
+.tippy-box[data-theme^='transparent'][data-placement^='top'] {
+  @apply -mb-2;
+}
+.tippy-box[data-theme^='transparent'][data-placement^='right'] {
+  @apply -ml-2;
+}
+.tippy-box[data-theme^='transparent'][data-placement^='bottom'] {
+  @apply -mt-2;
+}
+.tippy-box[data-theme^='transparent'][data-placement^='left'] {
+  @apply -mr-2;
 }
 
 .slide-right-enter-active,

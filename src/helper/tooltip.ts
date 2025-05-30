@@ -10,7 +10,7 @@ export const useTooltip = () => {
 
   const showTip = (event: Event, content: string | HTMLElement, config: Partial<Props> = {}) => {
     tippyInstance?.destroy()
-    tippyInstance = tippy(event.target as HTMLElement, {
+    tippyInstance = tippy(event.currentTarget as HTMLElement, {
       content,
       placement: 'top',
       animation: 'scale',

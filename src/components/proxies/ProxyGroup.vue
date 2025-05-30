@@ -37,7 +37,7 @@
         />
       </div>
       <div
-        class="text-base-content/80 mt-[2px] flex items-center gap-2"
+        class="text-base-content/80 mt-0.5 flex items-center gap-2"
         @contextmenu.prevent.stop="handlerLatencyTest"
       >
         <div class="flex flex-1 items-center gap-1 text-sm">
@@ -72,7 +72,8 @@
 import { useBounceOnVisible } from '@/composables/bouncein'
 import { useRenderProxies } from '@/composables/renderProxies'
 import { PROXY_TYPE } from '@/constant'
-import { isHiddenGroup, prettyBytesHelper } from '@/helper'
+import { isHiddenGroup } from '@/helper'
+import { prettyBytesHelper } from '@/helper/utils'
 import { activeConnections } from '@/store/connections'
 import {
   handlerProxySelect,

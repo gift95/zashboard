@@ -158,17 +158,16 @@ import {
   TABLE_WIDTH_MODE,
 } from '@/constant'
 import {
-  fromNow,
   getChainsStringFromConnection,
   getDestinationFromConnection,
   getDestinationTypeFromConnection,
   getHostFromConnection,
   getInboundUserFromConnection,
-  getIPLabelFromMap,
   getNetworkTypeFromConnection,
   getProcessFromConnection,
-  prettyBytesHelper,
 } from '@/helper'
+import { getIPLabelFromMap } from '@/helper/sourceip'
+import { fromNow, prettyBytesHelper } from '@/helper/utils'
 import { renderConnections } from '@/store/connections'
 import {
   connectionTableColumns,

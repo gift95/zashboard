@@ -3,11 +3,11 @@
     <div
       ref="chart"
       class="h-full w-full"
-    ></div>
+    />
     <span
       class="border-b-primary/30 border-t-primary/60 border-l-info/30 border-r-info/60 text-base-content/10 bg-base-100/70 hidden"
       ref="colorRef"
-    ></span>
+    />
     <button
       class="btn btn-ghost btn-xs absolute right-1 bottom-0"
       @click="isPaused = !isPaused"

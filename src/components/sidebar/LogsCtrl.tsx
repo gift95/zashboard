@@ -3,7 +3,14 @@ import { LOG_LEVEL } from '@/constant'
 import { isMiddleScreen } from '@/helper/utils'
 import { initLogs, isPaused, logFilter, logLevel, logTypeFilter, logs } from '@/store/logs'
 import { logRetentionLimit, logSearchHistory } from '@/store/settings'
-import { PauseIcon, PlayIcon, WrenchScrewdriverIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import {
+  ArrowDownTrayIcon,
+  PauseIcon,
+  PlayIcon,
+  WrenchScrewdriverIcon,
+  XMarkIcon,
+} from '@heroicons/vue/24/outline'
+import dayjs from 'dayjs'
 import { debounce } from 'lodash'
 import { computed, defineComponent, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -73,6 +80,32 @@ export default defineComponent({
       return types.sort()
     })
 
+    const downloadAllLogs = () => {
+      const blob = new Blob(
+        [
+          logs.value
+            .map((log) =>
+              [
+                log.seq.toString().padEnd(5, ' '),
+                log.time,
+                log.type.padEnd(7, ' '),
+                log.payload,
+              ].join('\t'),
+            )
+            .join('\n'),
+        ],
+        {
+          type: 'text/plain',
+        },
+      )
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = dayjs().format('YYYY-MM-DD HH-mm-ss') + '.log'
+      a.click()
+      URL.revokeObjectURL(url)
+    }
+
     return () => {
       const levelSelect = (
         <select
@@ -105,7 +138,10 @@ export default defineComponent({
 
       const logTypeSelect = (
         <select
-          class={['join-item select select-sm w-36', !props.horizontal && 'w-full']}
+          class={[
+            'join-item select select-sm w-24 max-md:flex-1 sm:w-36',
+            !props.horizontal && 'w-full',
+          ]}
           v-model={logTypeFilter.value}
         >
           <option value="">{t('all')}</option>
@@ -146,6 +182,12 @@ export default defineComponent({
 
       const buttons = (
         <div class="flex items-center gap-2">
+          <button
+            class="btn btn-circle btn-sm"
+            onClick={downloadAllLogs}
+          >
+            <ArrowDownTrayIcon class="h-4 w-4" />
+          </button>
           {settingsModal}
           <button
             class="btn btn-circle btn-sm"

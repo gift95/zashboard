@@ -1,9 +1,8 @@
 import { updateRuleProviderAPI } from '@/api'
 import { useNotification } from '@/composables/notification'
-import { rulesTabShow } from '@/composables/rules'
 import { RULE_TAB_TYPE } from '@/constant'
 import { isMiddleScreen } from '@/helper/utils'
-import { fetchRules, ruleProviderList, rules, rulesFilter } from '@/store/rules'
+import { fetchRules, ruleProviderList, rules, rulesFilter, rulesTabShow } from '@/store/rules'
 import { displayLatencyInRule, displayNowNodeInRule } from '@/store/settings'
 import { ArrowPathIcon, WrenchScrewdriverIcon } from '@heroicons/vue/24/outline'
 import { computed, defineComponent, ref } from 'vue'
@@ -117,7 +116,7 @@ export default defineComponent({
         <TextInput
           class="w-full md:w-80"
           v-model={rulesFilter.value}
-          placeholder={t('search')}
+          placeholder={`${t('search')} | ${t('searchMultiple')}`}
           clearable={true}
         />
       )

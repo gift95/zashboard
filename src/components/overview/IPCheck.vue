@@ -70,8 +70,8 @@ const handlerShowPrivacyTip = (e: Event) => {
 const getIPs = () => {
   getIPInfo().then((res) => {
     ipsbIP.value = {
-      ipWithPrivacy: [`${res.country} ${res.asnName}`, res.ip],
-      ip: [`${res.country} ${res.asnName}`, '***.***.***.***'],
+      ipWithPrivacy: [`${res.country} ${res.organization}`, res.ip],
+      ip: [`${res.country} ${res.organization}`, '***.***.***.***'],
     }
   })
   getIPFromIpipnetAPI().then((res) => {

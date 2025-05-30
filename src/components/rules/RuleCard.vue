@@ -1,5 +1,5 @@
 <template>
-  <div class="card gap-2 p-2 text-sm">
+  <div class="card hover:bg-base-200 gap-2 p-2 text-sm">
     <div class="min-h-6">
       <span>{{ index }}.</span>
       <span class="ml-2 capitalize">{{ rule.type }}</span>

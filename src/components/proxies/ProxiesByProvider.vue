@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { useCalculateMaxProxies } from '@/composables/calculateMaxProxies'
 import { handlerProxySelect, proxyProviederList } from '@/store/proxies'
-import { twoColumnProxyGroup } from '@/store/settings'
 import { computed } from 'vue'
 import ProxyNodeCard from './ProxyNodeCard.vue'
 import ProxyNodeGrid from './ProxyNodeGrid.vue'
@@ -36,6 +36,8 @@ const groupedProxies = computed(() => {
 
   return providerKeys.map((providerName) => [providerName, groupdProixes[providerName]])
 })
+
+const { maxProxies } = useCalculateMaxProxies()
 </script>
 
 <template>
@@ -52,9 +54,7 @@ const groupedProxies = computed(() => {
       </p>
       <ProxyNodeGrid style="max-height: unset !important">
         <ProxyNodeCard
-          v-for="node in showFullContent
-            ? proxies
-            : proxies.slice(0, twoColumnProxyGroup ? 36 : 72)"
+          v-for="node in showFullContent ? proxies : proxies.slice(0, maxProxies)"
           :key="node"
           :name="node"
           :group-name="name"

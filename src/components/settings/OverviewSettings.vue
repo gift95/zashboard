@@ -24,6 +24,17 @@
           v-model="showIPAndConnectionInfo"
         />
       </div>
+      <div
+        class="flex items-center gap-2"
+        v-if="splitOverviewPage"
+      >
+        {{ $t('displayProxiesRelationship') }}
+        <input
+          class="toggle"
+          type="checkbox"
+          v-model="displayProxiesRelationship"
+        />
+      </div>
       <div class="flex items-center gap-2">
         {{ $t('autoIPCheckWhenStart') }}
         <input
@@ -71,6 +82,7 @@
 import {
   autoConnectionCheck,
   autoIPCheck,
+  displayProxiesRelationship,
   numberOfChartsInSidebar,
   showIPAndConnectionInfo,
   showStatisticsWhenSidebarCollapsed,

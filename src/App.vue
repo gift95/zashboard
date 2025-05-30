@@ -5,7 +5,8 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { RouterView } from 'vue-router'
 import { useNotification } from './composables/notification'
 import { FONTS } from './constant'
-import { getBase64FromIndexedDB, isPreferredDark, LOCAL_IMAGE } from './helper/utils'
+import { getBase64FromIndexedDB, LOCAL_IMAGE } from './helper/indexeddb'
+import { isPreferredDark } from './helper/utils'
 import {
   blurIntensity,
   customBackgroundURL,

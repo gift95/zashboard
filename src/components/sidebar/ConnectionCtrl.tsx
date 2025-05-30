@@ -143,7 +143,7 @@ export default defineComponent({
       const searchInput = (
         <TextInput
           v-model={connectionFilter.value}
-          placeholder={t('search')}
+          placeholder={`${t('search')} | ${t('searchMultiple')}`}
           clearable={true}
           before-close={true}
           class={props.horizontal && !isSmallScreen.value ? 'w-32 max-w-80 flex-1' : 'w-full'}

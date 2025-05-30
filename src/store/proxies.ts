@@ -9,7 +9,14 @@ import {
   selectProxyAPI,
 } from '@/api'
 import { useNotification } from '@/composables/notification'
-import { IPV6_TEST_URL, NOT_CONNECTED, PROXY_TYPE, TEST_URL } from '@/constant'
+import {
+  GLOBAL,
+  IPV6_TEST_URL,
+  NOT_CONNECTED,
+  PROXY_TAB_TYPE,
+  PROXY_TYPE,
+  TEST_URL,
+} from '@/constant'
 import { isProxyGroup } from '@/helper'
 import type { Proxy, ProxyProvider } from '@/types'
 import { useStorage } from '@vueuse/core'
@@ -26,7 +33,9 @@ import {
   speedtestUrl,
 } from './settings'
 
-export const GLOBAL = 'GLOBAL'
+export const proxiesFilter = ref('')
+export const proxiesTabShow = ref(PROXY_TAB_TYPE.PROXIES)
+
 export const proxyGroupList = ref<string[]>([])
 export const proxyMap = ref<Record<string, Proxy>>({})
 export const IPv6Map = useStorage<Record<string, boolean>>('config/ipv6-map', {})
@@ -36,17 +45,14 @@ export const proxyProviederList = ref<ProxyProvider[]>([])
 export const getTestUrl = (groupName?: string) => {
   const defaultUrl = speedtestUrl.value || TEST_URL
 
-  if (!groupName) {
+  if (!groupName || !independentLatencyTest.value) {
     return defaultUrl
   }
 
-  const proxyNode = proxyMap.value[groupName]
+  const proxyNode =
+    proxyMap.value[groupName] || proxyProviederList.value.find((p) => p.name === groupName)
 
-  if (independentLatencyTest.value && proxyNode.testUrl) {
-    return proxyNode.testUrl
-  }
-
-  return defaultUrl
+  return proxyNode?.testUrl || defaultUrl
 }
 
 export const getLatencyByName = (proxyName: string, groupName?: string) => {

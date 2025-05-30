@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { prettyBytesHelper } from '@/helper'
+import { prettyBytesHelper } from '@/helper/utils'
 import { activeConnections, closedConnections } from '@/store/connections'
 import type { Connection } from '@/types'
 import { computed } from 'vue'

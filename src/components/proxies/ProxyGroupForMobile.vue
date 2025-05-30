@@ -3,42 +3,43 @@
     class="relative h-20 cursor-pointer"
     ref="cardWrapperRef"
     @click="handlerGroupClick"
+    @touchmove="preventDefault"
+    @wheel="preventDefault"
   >
     <div
-      v-if="activeMode"
-      class="fixed inset-0 z-40 transition-all duration-200"
-      :class="modalMode && 'bg-black/30'"
+      v-if="modalMode"
+      class="fixed inset-0 z-40 overflow-hidden bg-black/30 transition-all duration-300"
     ></div>
     <div
-      class="card overflow-hidden will-change-[height,width,transform]"
-      :class="[
-        activeMode ? `fixed z-50` : 'absolute top-0 left-0 h-auto w-full',
-        transitionAll && 'transition-all duration-200',
-        blurIntensity < 5 && 'backdrop-blur-sm!',
-      ]"
-      :style="activeMode && [cardPosition, cardSize]"
+      class="card absolute overflow-hidden transition-[max-height,width,transform] duration-250 ease-in-out will-change-[max-height,width,transform]"
+      :class="modalMode && blurIntensity < 5 && 'backdrop-blur-sm!'"
+      :style="cardStyle"
       @contextmenu.prevent.stop="handlerLatencyTest"
       @transitionend="handlerTransitionEnd"
       ref="cardRef"
     >
-      <div class="flex h-20 shrink-0 flex-col gap-1 p-2">
-        <ProxyIcon
-          v-if="proxyGroup?.icon"
-          :icon="proxyGroup.icon"
-          size="small"
-          class="absolute top-2 right-2 z-[-1] h-10 w-10!"
-        />
-        <div class="text-md truncate">
-          {{ proxyGroup.name }}
-        </div>
-        <div class="text-base-content/80 flex gap-1 truncate text-xs">
-          <ProxyGroupNow
-            :name="proxyGroup.name"
-            :mobile="true"
+      <div class="flex h-20 shrink-0 flex-col p-2 pb-1">
+        <div class="flex flex-1">
+          <div class="flex flex-1 flex-col gap-0.5 overflow-hidden">
+            <div class="text-md truncate">
+              {{ proxyGroup.name }}
+            </div>
+            <div class="text-base-content/80 flex items-center gap-1 truncate">
+              <ProxyGroupNow
+                :name="proxyGroup.name"
+                :mobile="true"
+              />
+            </div>
+          </div>
+          <ProxyIcon
+            v-if="proxyGroup?.icon"
+            :icon="proxyGroup.icon"
+            size="small"
+            class="h-10 w-10! shrink-0"
           />
         </div>
 
-        <div class="flex h-4 items-center justify-between gap-1">
+        <div class="flex items-center">
           <div class="flex flex-1 items-center gap-1 truncate">
             <span class="text-base-content/60 shrink-0 text-xs">
               {{ proxyGroup.type }} ({{ proxiesCount }})
@@ -69,16 +70,19 @@
       </div>
 
       <div
-        v-if="modalMode"
-        class="overflow-x-hidden overflow-y-auto p-2"
+        v-if="displayContent"
+        class="overflow-x-hidden overflow-y-auto overscroll-contain p-2"
         style="width: calc(100vw - 1rem)"
+        ref="cardContentRef"
+        @touchmove.stop="preventDefaultForContent"
+        @wheel.stop="preventDefaultForContent"
       >
         <Component
           :is="groupProxiesByProvider ? ProxiesByProvider : ProxiesContent"
           :name="name"
           :now="proxyGroup.now"
           :render-proxies="renderProxies"
-          :show-full-content="true"
+          :show-full-content="showAllContent"
           style="max-height: unset !important"
         />
       </div>
@@ -94,7 +98,7 @@ import { hiddenGroupMap, proxyGroupLatencyTest, proxyMap } from '@/store/proxies
 import { blurIntensity, groupProxiesByProvider, manageHiddenGroup } from '@/store/settings'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
 import { twMerge } from 'tailwind-merge'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import LatencyTag from './LatencyTag.vue'
 import ProxiesByProvider from './ProxiesByProvider.vue'
 import ProxiesContent from './ProxiesContent.vue'
@@ -109,72 +113,114 @@ const allProxies = computed(() => proxyGroup.value.all ?? [])
 const { proxiesCount, renderProxies } = useRenderProxies(allProxies, props.name)
 const isLatencyTesting = ref(false)
 
-const activeMode = ref(false)
-const modalMode = ref(activeMode.value)
-const diplayAllContent = ref(activeMode.value)
+const modalMode = ref(false)
+const displayContent = ref(false)
+const showAllContent = ref(modalMode.value)
 
 const cardWrapperRef = ref()
 const cardRef = ref()
+const cardContentRef = ref()
+const overflowY = ref(false)
 
-const initWidth = ref(0)
-const initHeight = ref(0)
-const transitionAll = ref(false)
-
-const cardPosition = ref<Record<string, string>>({})
-const cardSize = computed(() => {
-  if (modalMode.value) {
-    return {
-      width: 'calc(100vw - 1rem)',
-      maxHeight: `calc(100vh - ${cardPosition.value.bottom || cardPosition.value.top} - 4rem)`,
-    }
-  }
-  return {
-    width: initWidth.value + 'px',
-    height: initHeight.value + 'px',
-  }
+const INIT_STYLE = {
+  width: '100%',
+  maxHeight: '100%',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 10,
+}
+const cardStyle = ref<Record<string, string | number>>({
+  ...INIT_STYLE,
 })
+const calcCardStyle = () => {
+  if (!cardWrapperRef.value) return
+  if (!modalMode.value) {
+    cardStyle.value = {
+      ...cardStyle.value,
+      width: '100%',
+      maxHeight: '100%',
+      transform: 'translateY(0)',
+      transition:
+        'width 0.25s ease-in-out,transform 0.25s ease-in-out,max-height 0.18s ease-in-out!important',
+    }
+    return
+  }
+  const manyProxies = renderProxies.value.length > 4
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+  const { left, top, bottom } = cardWrapperRef.value.getBoundingClientRect()
+  const { innerHeight, innerWidth } = window
 
-const transitionEndCallback = ref<() => void>(() => {})
-const handlerTransitionEnd = () => {
-  transitionEndCallback.value()
+  const minSafeArea = innerHeight * 0.15
+  const baseLine = innerHeight * 0.2
+  const maxSafeArea = innerHeight * 0.3
+
+  const isLeft = left < innerWidth / 3
+  const isTop = (top + bottom) * 0.5 < innerHeight * (manyProxies ? 0.7 : 0.5)
+  const transformOrigin = isLeft
+    ? isTop
+      ? 'top left'
+      : 'bottom left'
+    : isTop
+      ? 'top right'
+      : 'bottom right'
+  const positionKeyX = isLeft ? 'left' : 'right'
+  const positionKeyY = isTop ? 'top' : 'bottom'
+
+  let transformValueY = 0
+  let verticalOffset = 0
+
+  if (isTop) {
+    if (top < minSafeArea || (top > maxSafeArea && manyProxies)) {
+      transformValueY = baseLine - top
+    }
+    verticalOffset = top + transformValueY
+  } else {
+    const minSafeBottom = innerHeight - minSafeArea
+    const maxSafeBottom = innerHeight - maxSafeArea
+    const baseLineBottom = innerHeight - baseLine
+
+    if (bottom > minSafeBottom || (bottom < maxSafeBottom && manyProxies)) {
+      transformValueY = baseLineBottom - bottom
+    }
+    verticalOffset = innerHeight - bottom - transformValueY
+  }
+
+  cardStyle.value = {
+    width: 'calc(100vw - 1rem)',
+    maxHeight: `calc(100dvh - ${verticalOffset}px - 7rem)`,
+    transform: `translateY(${transformValueY}px)`,
+    transformOrigin,
+    zIndex: 50,
+    [positionKeyY]: 0,
+    [positionKeyX]: 0,
+  }
+}
+
+const handlerTransitionEnd = (e: TransitionEvent) => {
+  if (e.propertyName !== 'width') return
+  showAllContent.value = modalMode.value
+  if (!modalMode.value) {
+    cardStyle.value = {
+      ...INIT_STYLE,
+    }
+    displayContent.value = false
+    return
+  }
+
+  nextTick(() => {
+    if (!cardContentRef.value) return
+    overflowY.value = cardContentRef.value.scrollHeight > cardContentRef.value.clientHeight
+  })
 }
 
 const handlerGroupClick = async () => {
-  const { innerHeight, innerWidth } = window
-  const { x, y, width, height } = cardWrapperRef.value.getBoundingClientRect()
-  const leftRightKey = x < innerWidth / 3 ? 'left' : 'right'
-  const topBottomKey = y < innerHeight / 2 ? 'top' : 'bottom'
-  const topBottomValue = topBottomKey === 'top' ? y : innerHeight - y - height
-
-  transitionEndCallback.value = () => {}
-  diplayAllContent.value = false
-  transitionAll.value = false
-  cardPosition.value = {
-    [leftRightKey]: '0.5rem',
-    [topBottomKey]: topBottomValue + 'px',
+  modalMode.value = !modalMode.value
+  if (modalMode.value) {
+    displayContent.value = true
   }
-
-  if (activeMode.value) {
-    transitionAll.value = true
-    modalMode.value = false
-    transitionEndCallback.value = () => {
-      transitionAll.value = false
-      activeMode.value = false
-    }
-  } else {
-    initWidth.value = width
-    initHeight.value = height
-    activeMode.value = true
-    await sleep(50)
-    transitionAll.value = true
-    cardPosition.value[topBottomKey] = Math.max(topBottomValue, innerHeight * 0.15) + 'px'
-    modalMode.value = true
-    transitionEndCallback.value = () => {
-      diplayAllContent.value = true
-    }
-  }
+  calcCardStyle()
 }
 
 const handlerLatencyTest = async () => {
@@ -197,6 +243,18 @@ const hiddenGroup = computed({
 
 const handlerGroupToggle = () => {
   hiddenGroup.value = !hiddenGroup.value
+}
+
+const preventDefault = (e: Event) => {
+  if (modalMode.value) {
+    e.preventDefault()
+  }
+}
+
+const preventDefaultForContent = (e: Event) => {
+  if (!overflowY.value) {
+    e.preventDefault()
+  }
 }
 
 useBounceOnVisible(cardRef)

@@ -1,4 +1,4 @@
-import { prettyBytesHelper } from '@/helper'
+import { prettyBytesHelper } from '@/helper/utils'
 import { activeConnections, downloadTotal, uploadTotal } from '@/store/connections'
 import { downloadSpeed, memory, uploadSpeed } from '@/store/overview'
 import { computed } from 'vue'

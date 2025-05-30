@@ -1,23 +1,27 @@
 <script setup lang="ts">
+import { useCalculateMaxProxies } from '@/composables/calculateMaxProxies'
 import { handlerProxySelect } from '@/store/proxies'
-import { twoColumnProxyGroup } from '@/store/settings'
+import { computed } from 'vue'
 import ProxyNodeCard from './ProxyNodeCard.vue'
 import ProxyNodeGrid from './ProxyNodeGrid.vue'
 
-defineProps<{
+const props = defineProps<{
   name: string
   now: string
   renderProxies: string[]
   showFullContent: boolean
 }>()
+
+const { maxProxies } = useCalculateMaxProxies()
+const proxies = computed(() =>
+  props.showFullContent ? props.renderProxies : props.renderProxies.slice(0, maxProxies.value),
+)
 </script>
 
 <template>
-  <ProxyNodeGrid>
+  <ProxyNodeGrid ref="grid">
     <ProxyNodeCard
-      v-for="node in showFullContent
-        ? renderProxies
-        : renderProxies.slice(0, twoColumnProxyGroup ? 48 : 96)"
+      v-for="node in proxies"
       :key="node"
       :name="node"
       :group-name="name"

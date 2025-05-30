@@ -2,6 +2,7 @@ import {
   CONNECTIONS_TABLE_ACCESSOR_KEY,
   DETAILED_CARD_STYLE,
   FONTS,
+  GLOBAL,
   IP_INFO_API,
   LANG,
   PROXY_CARD_SIZE,
@@ -87,7 +88,7 @@ export const disablePullToRefresh = useStorage('config/disable-pull-to-refresh',
 export const displayAllFeatures = useStorage('config/display-all-features', false)
 export const blurIntensity = useStorage('config/blur-intensity', 10)
 export const scrollAnimationEffect = useStorage('config/scroll-animation-effect', true)
-export const IPInfoAPI = useStorage('config/ip-info-api', IP_INFO_API.IPSB)
+export const IPInfoAPI = useStorage('config/geoip-info-api', IP_INFO_API.IPSB)
 export const autoDisconnectIdleUDP = useStorage('config/auto-disconnect-idle-udp', false)
 export const autoDisconnectIdleUDPTime = useStorage('config/auto-disconnect-idle-udp-time', 300)
 
@@ -104,6 +105,7 @@ export const numberOfChartsInSidebar = useStorage<1 | 2 | 3>(
   'config/number-of-charts-in-sidebar',
   2,
 )
+export const displayProxiesRelationship = useStorage('config/display-proxies-relationship', true)
 
 // proxies
 export const collapseGroupMap = useStorage<Record<string, boolean>>('config/collapse-group-map', {})
@@ -133,6 +135,7 @@ export const minProxyCardWidth = useStorage<number>(
 export const manageHiddenGroup = useStorage('config/manage-hidden-group-mode', false)
 
 export const displayGlobalByMode = useStorage('config/display-global-by-mode', false)
+export const customGlobalNode = useStorage('config/custom-global-node-name', GLOBAL)
 export const iconSize = useStorage('config/icon-size', 14)
 export const iconMarginRight = useStorage('config/icon-margin-right', 6)
 export const proxyCountMode = useStorage('config/proxies-count-mode', PROXY_COUNT_MODE.ALIVE_TOTAL)

@@ -118,19 +118,37 @@
           </select>
         </div>
         <div class="flex items-center gap-2">
-          {{ $t('truncateProxyName') }}
-          <input
-            class="toggle"
-            type="checkbox"
-            v-model="truncateProxyName"
-          />
-        </div>
-        <div class="flex items-center gap-2">
           {{ $t('displayGlobalByMode') }}
           <input
             class="toggle"
             type="checkbox"
             v-model="displayGlobalByMode"
+          />
+        </div>
+        <div
+          class="flex items-center gap-2"
+          v-if="displayGlobalByMode && isSingBox"
+        >
+          {{ $t('customGlobalNode') }}
+          <select
+            class="select select-sm min-w-24"
+            v-model="customGlobalNode"
+          >
+            <option
+              v-for="opt in Object.keys(proxyMap)"
+              :key="opt"
+              :value="opt"
+            >
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2">
+          {{ $t('truncateProxyName') }}
+          <input
+            class="toggle"
+            type="checkbox"
+            v-model="truncateProxyName"
           />
         </div>
         <div class="flex items-center gap-2">
@@ -157,10 +175,13 @@
 </template>
 
 <script setup lang="ts">
+import { isSingBox } from '@/api'
 import { PROXY_CARD_SIZE, PROXY_COUNT_MODE, PROXY_PREVIEW_TYPE } from '@/constant'
 import { useTooltip } from '@/helper/tooltip'
 import { getMinCardWidth } from '@/helper/utils'
+import { proxyMap } from '@/store/proxies'
 import {
+  customGlobalNode,
   displayGlobalByMode,
   iconMarginRight,
   iconSize,

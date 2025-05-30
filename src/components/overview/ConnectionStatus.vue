@@ -39,7 +39,7 @@ import {
   getCloudflareLatencyAPI,
   getGithubLatencyAPI,
   getYouTubeLatencyAPI,
-} from '@/api'
+} from '@/api/latency'
 import {
   baiduLatency,
   cloudflareLatency,

@@ -115,7 +115,7 @@ const en = {
   globalIP: 'Global IP',
   networkInfo: 'Network Info',
   autoSwitchTheme: 'Auto Switch Theme',
-  customBackgroundURL: 'Background URL',
+  customBackgroundURL: 'Background',
   splitOverviewPage: 'Split Overview Page',
   manageHiddenGroup: 'Manage Hidden Groups',
   showIPAndConnectionInfo: 'Display IP and Connection Info',
@@ -145,6 +145,7 @@ const en = {
   independentLatencyTestTip:
     "Enabling Independent Latency Test will attempt to use the URLs specified in the configuration file instead of the zashboard's URL settings during the latency test. Latency will be displayed independently based on the URLs set in the policy groups.",
   search: 'Search',
+  searchMultiple: 'Space-separated keywords',
   allSourceIP: 'All Source IPs',
   importing: 'Importing',
   hideConnection: 'Hide Connection',
@@ -204,8 +205,9 @@ const en = {
   autoDisconnectIdleUDPTime: 'UDP Idle Time',
   autoDisconnectIdleUDPTip:
     'When enabled, opening the zashboard will close UDP connections that have been active for longer than the configured number of minutes. This may help with certain UDP connections that do not disconnect automatically as expected.',
-  limitEffectiveScope: 'Limit The Effective Scope',
-  allBackends: 'All Backends',
+  customGlobalNode: 'Custom Global Node',
+  proxiesRelationship: 'Proxies Relationship',
+  displayProxiesRelationship: 'Display Proxies Relationship',
 }
 
 export type LANG_MESSAGE = typeof en

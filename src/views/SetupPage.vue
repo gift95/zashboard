@@ -102,7 +102,7 @@
               class="btn btn-sm flex-1"
               @click="selectBackend(element.uuid)"
             >
-              {{ element.label || getUrlFromBackend(element) }}
+              {{ getLabelFromBackend(element) }}
             </button>
             <button
               class="btn btn-circle btn-ghost btn-sm"
@@ -127,7 +127,7 @@ import TextInput from '@/components/common/TextInput.vue'
 import LanguageSelect from '@/components/settings/LanguageSelect.vue'
 import { useNotification } from '@/composables/notification'
 import { ROUTE_NAME } from '@/constant'
-import { getUrlFromBackend } from '@/helper'
+import { getLabelFromBackend, getUrlFromBackend } from '@/helper/utils'
 import router from '@/router'
 import { activeUuid, addBackend, backendList, removeBackend } from '@/store/setup'
 import type { Backend } from '@/types'

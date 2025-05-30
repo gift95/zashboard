@@ -18,7 +18,7 @@
     </button>
   </div>
   <div
-    class="collapse rounded-none shadow-none"
+    class="transparent-collapse collapse rounded-none shadow-none"
     :class="dialogVisible ? 'collapse-open' : ''"
   >
     <div class="collapse-content p-0">

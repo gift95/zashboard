@@ -1,15 +1,13 @@
 import { CONNECTION_TAB_TYPE, PROXY_TAB_TYPE, ROUTE_NAME, RULE_TAB_TYPE } from '@/constant'
 import { renderRoutes } from '@/helper'
 import { connectionTabShow } from '@/store/connections'
-import { proxyProviederList } from '@/store/proxies'
-import { ruleProviderList } from '@/store/rules'
+import { proxiesTabShow, proxyProviederList } from '@/store/proxies'
+import { ruleProviderList, rulesTabShow } from '@/store/rules'
 import { swipeInPages, swipeInTabs } from '@/store/settings'
 import { useSwipe } from '@vueuse/core'
 import { flatten } from 'lodash'
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useProxies } from './proxies'
-import { rulesTabShow } from './rules'
 
 export const disableSwipe = ref(false)
 
@@ -17,7 +15,6 @@ export const useSwipeRouter = () => {
   const swiperRef = ref()
   const route = useRoute()
   const router = useRouter()
-  const { proxiesTabShow } = useProxies()
   const { direction } = useSwipe(swiperRef, { threshold: 75 })
 
   const swipeList = computed(() => {

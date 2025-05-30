@@ -116,7 +116,7 @@ const zh: LANG_MESSAGE = {
   globalIP: '全球节点 IP',
   networkInfo: '网络信息',
   autoSwitchTheme: '自动切换主题',
-  customBackgroundURL: '背景 URL',
+  customBackgroundURL: '面板背景',
   splitOverviewPage: '分离概览页',
   manageHiddenGroup: '管理隐藏代理组',
   showIPAndConnectionInfo: '显示 IP 和连接信息',
@@ -146,6 +146,7 @@ const zh: LANG_MESSAGE = {
   independentLatencyTestTip:
     '开启独立延迟测试会在测速中尽可能的使用配置文件中的url覆盖面板设置的url，并展示根据策略组设置的url获取的延迟。',
   search: '搜索',
+  searchMultiple: '多个关键词用空格分隔',
   allSourceIP: '全部源IP',
   importing: '正在导入',
   hideConnection: '隐藏连接',
@@ -203,8 +204,9 @@ const zh: LANG_MESSAGE = {
   autoDisconnectIdleUDPTime: 'UDP空闲时间',
   autoDisconnectIdleUDPTip:
     '启用后，打开zashboard时将关闭持续时间超过配置分钟数的UDP连接，这可能对某些无法正常自动断开的UDP连接带来帮助。(这是作者自己的私货，你大概率不需要打开它)',
-  limitEffectiveScope: '限制有效范围',
-  allBackends: '所有后端',
+  customGlobalNode: '自定义全局节点',
+  proxiesRelationship: '节点关系',
+  displayProxiesRelationship: '显示节点关系',
 }
 
 export default zh

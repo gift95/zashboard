@@ -7,7 +7,7 @@
       v-if="icon"
       :icon="icon"
       :size="size"
-      :class="size === 'large' && '-mt-[2px]'"
+      :class="size === 'large' && '-mt-0.5'"
     />
     {{ name }}
   </div>
