@@ -18,11 +18,11 @@
     </button>
   </div>
   <div
-    class="collapse rounded-none shadow-none"
+    class="transparent-collapse collapse rounded-none shadow-none"
     :class="dialogVisible ? 'collapse-open' : ''"
   >
     <div class="collapse-content p-0">
-      <div class="flex flex-col gap-2 pt-4">
+      <div class="flex flex-col gap-2">
         <Draggable
           v-if="dialogVisible"
           class="flex flex-1 flex-col gap-2"

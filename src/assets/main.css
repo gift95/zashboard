@@ -31,6 +31,10 @@
   @apply bg-base-100 rounded-lg shadow-md;
 }
 
+.collapse.transparent-collapse {
+  @apply bg-transparent! shadow-none! backdrop-blur-none!;
+}
+
 @utility select {
   @apply w-auto;
 }
