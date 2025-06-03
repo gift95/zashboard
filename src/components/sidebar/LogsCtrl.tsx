@@ -139,7 +139,7 @@ export default defineComponent({
       const logTypeSelect = (
         <select
           class={[
-            'join-item select select-sm w-24 max-md:flex-1 sm:w-36',
+            'join-item select select-sm w-24 max-md:flex-1 md:w-36',
             !props.horizontal && 'w-full',
           ]}
           v-model={logTypeFilter.value}
