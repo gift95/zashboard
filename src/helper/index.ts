@@ -19,6 +19,8 @@ import {
 } from '@/store/settings'
 import type { Connection } from '@/types'
 import dayjs from 'dayjs'
+import * as ipaddr from 'ipaddr.js'
+import { head } from 'lodash'
 import { computed } from 'vue'
 import { prettyBytesHelper } from './utils'
 
@@ -103,18 +105,24 @@ export const getProcessFromConnection = (connection: Connection) => {
 }
 
 export const getDestinationFromConnection = (connection: Connection) => {
+  const finalProxyType = proxyMap.value[head(connection.chains) || '']?.type.toLowerCase()
+
+  if (finalProxyType === PROXY_TYPE.Direct && connection.metadata.remoteDestination) {
+    return connection.metadata.remoteDestination
+  }
+
   return connection.metadata.destinationIP || connection.metadata.host
 }
 
 export const getDestinationTypeFromConnection = (connection: Connection) => {
-  const destinationIP = connection.metadata.destinationIP
+  const destination = getDestinationFromConnection(connection)
 
-  if (!destinationIP) {
-    return 'FQDN'
-  } else if (destinationIP.includes(':')) {
+  if (ipaddr.IPv4.isIPv4(destination)) {
+    return 'IPv4'
+  } else if (ipaddr.IPv6.isIPv6(destination)) {
     return 'IPv6'
   } else {
-    return 'IPv4'
+    return 'FQDN'
   }
 }
 

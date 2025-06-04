@@ -32,6 +32,7 @@ import {
   speedtestTimeout,
   speedtestUrl,
 } from './settings'
+import { fetchSmartGroupWeights } from './smart'
 
 export const proxiesFilter = ref('')
 export const proxiesTabShow = ref(PROXY_TAB_TYPE.PROXIES)
@@ -115,7 +116,7 @@ export const fetchProxies = async () => {
 
   proxyProviederList.value = providers
 
-  Object.entries(proxyMap.value).map(([name, proxy]) => {
+  Object.entries(proxyMap.value).forEach(([name, proxy]) => {
     const iconReflect = iconReflectList.value.find((icon) => icon.name === name)
 
     if (iconReflect) {
@@ -123,6 +124,10 @@ export const fetchProxies = async () => {
     }
     if (IPv6test.value && getIPv6FromExtra(proxy)) {
       IPv6Map.value[name] = true
+    }
+
+    if (proxy.type.toLowerCase() === PROXY_TYPE.Smart) {
+      fetchSmartGroupWeights(name)
     }
   })
 }

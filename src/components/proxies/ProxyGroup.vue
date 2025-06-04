@@ -71,7 +71,6 @@
 <script setup lang="ts">
 import { useBounceOnVisible } from '@/composables/bouncein'
 import { useRenderProxies } from '@/composables/renderProxies'
-import { PROXY_TYPE } from '@/constant'
 import { isHiddenGroup } from '@/helper'
 import { prettyBytesHelper } from '@/helper/utils'
 import { activeConnections } from '@/store/connections'
@@ -82,7 +81,6 @@ import {
   proxyMap,
 } from '@/store/proxies'
 import { groupProxiesByProvider, manageHiddenGroup } from '@/store/settings'
-import { fetchSmartGroupWeights } from '@/store/smart'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
 import { twMerge } from 'tailwind-merge'
 import { computed, ref } from 'vue'
@@ -132,8 +130,4 @@ const handlerGroupToggle = () => {
 }
 
 useBounceOnVisible()
-
-if (proxyGroup.value.type.toLowerCase() === PROXY_TYPE.Smart) {
-  fetchSmartGroupWeights(props.name)
-}
 </script>

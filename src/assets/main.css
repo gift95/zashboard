@@ -18,47 +18,47 @@
     font-family: 'NotoEmoji';
     src: url('./NotoColorEmoji-flagsonly.ttf') format('truetype');
   }
+}
 
-  .collapse {
-    @apply bg-base-100 rounded-lg shadow-md;
+@utility card {
+  @apply bg-base-100 rounded-lg shadow-md;
+  .card-body {
+    @apply p-4;
   }
+}
 
-  .collapse.transparent-collapse {
-    @apply bg-transparent! shadow-none! backdrop-blur-none!; /* 取代 background-color: transparent */
-  }
+@utility collapse {
+  @apply bg-base-100 rounded-lg shadow-md;
+}
 
-  .card {
-    @apply bg-base-100 rounded-lg shadow-md;
-    .card-body {
-      @apply p-4;
-    }
-  }
+.collapse.transparent-collapse {
+  @apply bg-transparent! shadow-none! backdrop-blur-none!;
+}
 
-  .select {
-    @apply w-auto;
-  }
+@utility select {
+  @apply w-auto;
+}
 
-  .btn {
-    @apply border-none;
-  }
+@utility btn {
+  @apply border-none;
+}
 
-  .tabs {
-    .tab {
-      @apply px-2;
-    }
-    .tab.tab-active {
-      @apply bg-primary text-primary-content;
-    }
-  }
-
+@utility tabs {
   .tab {
-    @apply max-md:min-w-24;
+    @apply px-2;
   }
+  .tab.tab-active {
+    @apply bg-primary text-primary-content;
+  }
+}
 
-  .table {
-    & tr {
-      @apply border-b-0;
-    }
+@utility tab {
+  @apply max-md:min-w-24;
+}
+
+@utility table {
+  & tr {
+    @apply border-b-0;
   }
 }
 
@@ -130,7 +130,7 @@
     .ctrls-bar,
     .nav-bar,
     .modal-box,
-    .table,
+    .table tbody,
     .table thead {
       /* prettier-ignore */
       backdrop-filter: blur($(i)px);
