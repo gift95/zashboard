@@ -2,6 +2,15 @@
 
 # Changelog
 
+## [1.93.1](https://github.com/Zephyruso/zashboard/compare/v1.93.0...v1.93.1) (2025-06-05)
+
+
+### Bug Fixes
+
+* collapse style with opacity ([78eefe3](https://github.com/Zephyruso/zashboard/commit/78eefe39a862acbef852c2a47420d7edf3cbcfa0))
+* final destination for direct connection ([0702d1a](https://github.com/Zephyruso/zashboard/commit/0702d1afdb46b11ab0c4f31021d3570e3f19b0cc))
+* smart weights display for mobile ([4183ece](https://github.com/Zephyruso/zashboard/commit/4183ece9049114cfcf4c686c45e6833f56635128))
+
 ## [1.93.0](https://github.com/Zephyruso/zashboard/compare/v1.92.0...v1.93.0) (2025-05-29)
 
 
