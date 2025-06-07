@@ -22,9 +22,6 @@ importers:
       '@tanstack/vue-virtual':
         specifier: ^3.13.8
         version: 3.13.8(vue@3.5.14(typescript@5.8.3))
-      '@types/echarts':
-        specifier: ^5.0.0
-        version: 5.0.0
       '@types/reconnectingwebsocket':
         specifier: ^1.0.10
         version: 1.0.10
@@ -1812,13 +1809,6 @@ packages:
       {
         integrity: sha512-Kmwj4u8sDRDrMYRoN9FDEcXD8UpBSaPQQ24Gz+Gamqfm7xxn+GBR7ge/Z7pK8OXNGyUzbSwJj+TH6B+DS/epyA==,
       }
-
-  '@types/echarts@5.0.0':
-    resolution:
-      {
-        integrity: sha512-5uc/16BlYpzH8kU/u8aeRRgY2FV6yRY7RjPnYfUFPowl0F3kvNgfaz09PmeVdLkqdAtMft3XkCfqiJPJjG2DNQ==,
-      }
-    deprecated: This is a stub types definition. echarts provides its own type definitions, so you do not need this installed.
 
   '@types/estree@0.0.39':
     resolution:
@@ -6368,10 +6358,6 @@ snapshots:
       vue: 3.5.14(typescript@5.8.3)
 
   '@tsconfig/node22@22.0.2': {}
-
-  '@types/echarts@5.0.0':
-    dependencies:
-      echarts: 5.6.0
 
   '@types/estree@0.0.39': {}
 
